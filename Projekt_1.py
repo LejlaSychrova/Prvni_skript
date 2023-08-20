@@ -52,18 +52,27 @@ if jmeno in registrovani.keys() and heslo == registrovani[jmeno]:
     print("We have 3 texts to be analyzed.")
     print("-"*40)
     volba = int(input("Enter a number btw. 1 and 3 to select: "))
+    
     if volba in range (1,4):
+        pocet_dle_delky = dict()
         for slovo in texts[volba-1].split():
             pocet_slov +=1
             if slovo.istitle():
                 pocet_slov_zac_velke +=1
-            if slovo.isupper():
+            if slovo.isupper() and slovo.isalpha():
                 pocet_slov_velke +=1
             if slovo.islower():
                 pocet_slov_male +=1
             if slovo.isnumeric():
                 pocet_cisel +=1
                 suma_cisel = suma_cisel + int(slovo)
+            
+            delka = len(slovo.rstrip(",").rstrip("."))
+            if delka not in pocet_dle_delky:
+                pocet_dle_delky.update({delka:1})
+            else:
+                pocet_dle_delky[delka] += 1
+                
         print("-"*40)
         print(f"There are {pocet_slov} words in the selected text.")
         print(f"There are {pocet_slov_zac_velke} titlecase words.")
@@ -75,18 +84,20 @@ if jmeno in registrovani.keys() and heslo == registrovani[jmeno]:
         print("LEN|  OCCURENCES      |NR.")
         print("-"*40)
 
-        max_delka = 0
-        for slovo in texts[volba-1].split():
-            if len(slovo) > max_delka:
-                max_delka = len(slovo)
+        #max_delka = 0
+        #for slovo in texts[volba-1].split():
+        #    if len(slovo) > max_delka:
+        #        max_delka = len(slovo)
                 
-        delka = 1
-        for delka in range (1, max_delka+1):
-            pocet_s_delkou = 0
-            for slovo in texts[volba-1].split():
-                if len(slovo) == delka:
-                    pocet_s_delkou +=1
-            print(str(delka).ljust(2),"|",("*"*pocet_s_delkou).ljust(16), "|", pocet_s_delkou)
+        #delka = 1
+        #for delka in range (1, max_delka+1):
+        #    pocet_s_delkou = 0
+        #    for slovo in texts[volba-1].split():
+        #        if len(slovo.rstrip(",").rstrip(".")) == delka:
+        #            pocet_s_delkou +=1
+        for delka in sorted(pocet_dle_delky): 
+            print(str(delka).ljust(2),"|", ("*"*pocet_dle_delky[delka]).ljust(16), "|", pocet_dle_delky[delka])
+        #    print(str(delka).ljust(2),"|",("*"*pocet_s_delkou).ljust(16), "|", pocet_s_delkou)
 
     else:
         print("Invalid input, terminating the program..")
